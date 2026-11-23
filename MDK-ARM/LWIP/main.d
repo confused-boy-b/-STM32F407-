@@ -23,6 +23,8 @@ lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
 lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
+lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h
+lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h
 lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_eth.h
 lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
@@ -30,6 +32,8 @@ lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 lwip\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+lwip\main.o: ../Core/Inc/dcmi.h
+lwip\main.o: ../Core/Inc/dma.h
 lwip\main.o: ../LWIP/App/lwip.h
 lwip\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/opt.h
 lwip\main.o: ../LWIP/Target/lwipopts.h
@@ -77,4 +81,10 @@ lwip\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/ip.h
 lwip\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/ip6.h
 lwip\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ip.h
 lwip\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/udp.h
+lwip\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/tcp.h
+lwip\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/tcpbase.h
+lwip\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/icmp.h
+lwip\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/icmp.h
 lwip\main.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+lwip\main.o: ../Drivers/OV2640/Inc/OV2640.h
+lwip\main.o: ../Drivers/OV2640/Inc/OV2640Run.h

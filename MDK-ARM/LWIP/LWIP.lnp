@@ -2,6 +2,8 @@
 "lwip\startup_stm32f407xx.o"
 "lwip\main.o"
 "lwip\gpio.o"
+"lwip\dcmi.o"
+"lwip\dma.o"
 "lwip\usart.o"
 "lwip\stm32f4xx_it.o"
 "lwip\stm32f4xx_hal_msp.o"
@@ -19,6 +21,8 @@
 "lwip\stm32f4xx_hal.o"
 "lwip\stm32f4xx_hal_exti.o"
 "lwip\stm32f4xx_hal_eth.o"
+"lwip\stm32f4xx_hal_dcmi.o"
+"lwip\stm32f4xx_hal_dcmi_ex.o"
 "lwip\stm32f4xx_hal_uart.o"
 "lwip\system_stm32f4xx.o"
 "lwip\ethernetif.o"
@@ -104,6 +108,10 @@
 "lwip\mld6.o"
 "lwip\nd6.o"
 "lwip\mqtt.o"
+"lwip\ov2640.o"
+"lwip\ov2640run.o"
+"lwip\sccb.o"
+"lwip\delay.o"
 --library_type=microlib --strict --scatter "LWIP\LWIP.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -24,6 +24,8 @@
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\include\\compat\\posix\\sys",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\include\\compat\\stdc",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\system\\arch",
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Drivers\\OV2640\\Inc",
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Drivers\\SYSTEM\\delay",
                 "E:\\Keil_v5\\ARM\\ARMCC\\include",
                 "E:\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\MDK-ARM",
@@ -35,7 +37,8 @@
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\core",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\core\\ipv4",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\core\\ipv6",
-                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\apps\\mqtt"
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\apps\\mqtt",
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Drivers\\OV2640\\Src"
             ],
             "defines": [
                 "USE_HAL_DRIVER",

@@ -25,6 +25,8 @@ lwip\sockets.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
 lwip\sockets.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 lwip\sockets.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 lwip\sockets.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
+lwip\sockets.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h
+lwip\sockets.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h
 lwip\sockets.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_eth.h
 lwip\sockets.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 lwip\sockets.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h

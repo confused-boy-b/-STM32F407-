@@ -28,8 +28,10 @@
 /* USER CODE BEGIN Includes */
 #include "eth_custom_phy_interface.h" /* 使用标准 PHY 寄存器地址和位掩码。 */
 #include "lwip/udp.h"                 /* 提供 udp_new/udp_bind/udp_recv/udp_sendto 声明。 */
+#include "lwip/tcp.h"                 /* 提供 tcp_new/tcp_bind/tcp_listen/tcp_write/tcp_output 声明。 */
 #include <string.h>                  /* 使用 strlen 计算串口发送长度。 */
-
+#include "OV2640.h"                        /* 使用摄像头驱动函数。 */
+#include "OV2640Run.h"                     /* 使用摄像头采集函数。 */
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -228,7 +230,7 @@ static void App_Ethernet_Link_Check(struct netif *netif)
 /*
 TCP发送函数
 */
-void TCP_Send(struct tcp_pcb *pcb, char *data, u16_t len)
+void TCP_Send(struct tcp_pcb *pcb, char *data, u32_t len)
 {
   if (pcb == NULL)
     return;  /* 还没客户端连接，没地方发，直接丢弃 */
@@ -249,9 +251,17 @@ static void Command_Execute(char *cmd, u16_t len)
 {
   if (len == 0)
     return; /* 空命令直接返回 */
-
-  /* 这里可以根据 cmd 内容执行不同的操作，这里只是简单回显。 */
+  
+  uint8_t *p = NULL;
+  uint32_t send_len = 0;
   TCP_Send(tcp_client_pcb, cmd, len);
+  // /* 本函数只采集一帧；p 指向全局帧缓冲，下次调用会被覆盖，需立即发送。 */
+  // jpeg_test(&p, &send_len);
+  // /* 这里可以根据 cmd 内容执行不同的操作，这里只是简单回显。 */
+  // if (p != NULL && send_len != 0)
+  // {
+  //   TCP_Send(tcp_client_pcb, (char *)p, send_len);
+  // }
 }
 /*
 数据回调
@@ -365,10 +375,13 @@ int main(void)
   MX_USART1_UART_Init();
   MX_DCMI_Init();
   /* USER CODE BEGIN 2 */
+  delay_init();
   /* 初始化后立即检查一次链路，以便已插网线时及时启动 MAC。 */
   App_Ethernet_Link_Check(netif_default);
-
-
+  ov2640_init();
+  TCP_Server_Init(5000);
+  HAL_UART_Transmit(&huart1, (uint8_t *)"TCP Server is running on port 5000\r\n", 36, HAL_MAX_DELAY);
+  uint32_t  last_link_check= HAL_GetTick();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -376,6 +389,11 @@ int main(void)
   while (1)
   {
     MX_LWIP_Process();
+    if ((uint32_t)(HAL_GetTick() - last_link_check) >= APP_LINK_CHECK_INTERVAL_MS)
+    {
+        last_link_check = HAL_GetTick();
+        App_Ethernet_Link_Check(netif_default);
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

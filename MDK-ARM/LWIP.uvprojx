@@ -333,7 +333,7 @@
               <MiscControls />
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine />
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../LWIP/App;../LWIP/Target;../Middlewares/Third_Party/LwIP/src/include;../Middlewares/Third_Party/LwIP/system;../Middlewares/Third_Party/LwIP/src/include/netif/ppp;../Middlewares/Third_Party/LwIP/src/include/lwip;../Middlewares/Third_Party/LwIP/src/include/lwip/apps;../Middlewares/Third_Party/LwIP/src/include/lwip/priv;../Middlewares/Third_Party/LwIP/src/include/lwip/prot;../Middlewares/Third_Party/LwIP/src/include/netif;../Middlewares/Third_Party/LwIP/src/include/compat/posix;../Middlewares/Third_Party/LwIP/src/include/compat/posix/arpa;../Middlewares/Third_Party/LwIP/src/include/compat/posix/net;../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys;../Middlewares/Third_Party/LwIP/src/include/compat/stdc;../Middlewares/Third_Party/LwIP/system/arch</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../LWIP/App;../LWIP/Target;../Middlewares/Third_Party/LwIP/src/include;../Middlewares/Third_Party/LwIP/system;../Middlewares/Third_Party/LwIP/src/include/netif/ppp;../Middlewares/Third_Party/LwIP/src/include/lwip;../Middlewares/Third_Party/LwIP/src/include/lwip/apps;../Middlewares/Third_Party/LwIP/src/include/lwip/priv;../Middlewares/Third_Party/LwIP/src/include/lwip/prot;../Middlewares/Third_Party/LwIP/src/include/netif;../Middlewares/Third_Party/LwIP/src/include/compat/posix;../Middlewares/Third_Party/LwIP/src/include/compat/posix/arpa;../Middlewares/Third_Party/LwIP/src/include/compat/posix/net;../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys;../Middlewares/Third_Party/LwIP/src/include/compat/stdc;../Middlewares/Third_Party/LwIP/system/arch;../Drivers/OV2640/Inc;../Drivers/SYSTEM/delay</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -432,7 +432,6 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
-                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -442,18 +441,6 @@
                     <v6WtE>2</v6WtE>
                     <v6Rtti>2</v6Rtti>
                   </Cads>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <useXO>2</useXO>
-                    <ClangAsOpt>1</ClangAsOpt>
-                  </Aads>
                 </FileArmAds>
               </FileOption>
             </File>
@@ -492,7 +479,6 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
-                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -502,18 +488,6 @@
                     <v6WtE>2</v6WtE>
                     <v6Rtti>2</v6Rtti>
                   </Cads>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <useXO>2</useXO>
-                    <ClangAsOpt>1</ClangAsOpt>
-                  </Aads>
                 </FileArmAds>
               </FileOption>
             </File>
@@ -726,7 +700,6 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
-                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -736,18 +709,6 @@
                     <v6WtE>2</v6WtE>
                     <v6Rtti>2</v6Rtti>
                   </Cads>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <useXO>2</useXO>
-                    <ClangAsOpt>1</ClangAsOpt>
-                  </Aads>
                 </FileArmAds>
               </FileOption>
             </File>
@@ -786,7 +747,6 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
-                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -796,18 +756,6 @@
                     <v6WtE>2</v6WtE>
                     <v6Rtti>2</v6Rtti>
                   </Cads>
-                  <Aads>
-                    <interw>2</interw>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <thumb>2</thumb>
-                    <SplitLS>2</SplitLS>
-                    <SwStkChk>2</SwStkChk>
-                    <NoWarn>2</NoWarn>
-                    <uSurpInc>2</uSurpInc>
-                    <useXO>2</useXO>
-                    <ClangAsOpt>1</ClangAsOpt>
-                  </Aads>
                 </FileArmAds>
               </FileOption>
             </File>
@@ -4945,6 +4893,36 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/OV2640</GroupName>
+          <Files>
+            <File>
+              <FileName>OV2640.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\OV2640\Src\OV2640.c</FilePath>
+            </File>
+            <File>
+              <FileName>OV2640Run.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\OV2640\Src\OV2640Run.c</FilePath>
+            </File>
+            <File>
+              <FileName>sccb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\OV2640\Src\sccb.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/SYSTEM</GroupName>
+          <Files>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\SYSTEM\delay\delay.c</FilePath>
             </File>
           </Files>
         </Group>

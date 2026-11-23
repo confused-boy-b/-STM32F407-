@@ -22,6 +22,8 @@ lwip\stm32f4xx_hal_flash_ex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
 lwip\stm32f4xx_hal_flash_ex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 lwip\stm32f4xx_hal_flash_ex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 lwip\stm32f4xx_hal_flash_ex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
+lwip\stm32f4xx_hal_flash_ex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h
+lwip\stm32f4xx_hal_flash_ex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h
 lwip\stm32f4xx_hal_flash_ex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_eth.h
 lwip\stm32f4xx_hal_flash_ex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 lwip\stm32f4xx_hal_flash_ex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h

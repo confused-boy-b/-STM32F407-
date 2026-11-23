@@ -52,11 +52,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-//接收长度
-#define LEN 1024
-//接收缓冲区
-uint8_t UART1_RxBuffer[LEN];
-struct udp_pcb * udp;
+struct tcp_pcb *tcp_server_pcb = NULL;  /* 监听用的 pcb */
+struct tcp_pcb *tcp_client_pcb = NULL;  /* 当前已连接的客户端 pcb */
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,8 +63,6 @@ void SystemClock_Config(void);
 static int32_t App_PHY_GetLinkMode(uint32_t *speed, uint32_t *duplex);
 /* 根据 PHY 状态更新 MAC 和 LwIP 网卡的物理链路状态。 */
 static void App_Ethernet_Link_Check(struct netif *netif);
-/* 通过指定 UDP 控制块向已连接的对端发送字符串。 */
-void UDP_Sent(struct udp_pcb *pcb, char *send_p);
 
 /* USER CODE END PFP */
 
@@ -231,33 +226,108 @@ static void App_Ethernet_Link_Check(struct netif *netif)
   }
 }
 /*
-  UDP接收回调函数
+TCP发送函数
 */
-void udp_receive_callback(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_addr_t *addr, u16_t port)
+void TCP_Send(struct tcp_pcb *pcb, char *data, u16_t len)
 {
-  udp_connect(pcb, addr, port);
-  UDP_Sent(pcb,"ok");
-  pbuf_free(p);
+  if (pcb == NULL)
+    return;  /* 还没客户端连接，没地方发，直接丢弃 */
+
+  /* flags 用 COPY 表示把数据拷进 LwIP 发送队列，
+     调用返回后你的 data 缓冲区可以立即复用/被覆盖 */
+  tcp_write(pcb, data, len, TCP_WRITE_FLAG_COPY);
+
+  /* 真正把队列里的数据推出去 */
+  tcp_output(pcb);
 }
 /*
-DUP固定IP和端口发送函数
+命令执行函数
+  Input : cmd – 命令字符串
+          len – 字符串长度
 */
-void UDP_Sent(struct udp_pcb *pcb,char *send_p)
+static void Command_Execute(char *cmd, u16_t len)
 {
-  u16_t len=strlen(send_p);
-  struct pbuf * p=pbuf_alloc(PBUF_TRANSPORT, len, PBUF_RAM);
-  pbuf_take(p, send_p, len);
-  udp_send(pcb, p);
-  pbuf_free(p);
+  if (len == 0)
+    return; /* 空命令直接返回 */
+
+  /* 这里可以根据 cmd 内容执行不同的操作，这里只是简单回显。 */
+  TCP_Send(tcp_client_pcb, cmd, len);
 }
 /*
-  UDP初始化函数
+数据回调
+  Input : arg – 注册时传入的自定义参数
+          tpcb – 新建的连接 PCB
+          p – 收到的数据包
+          err – 错误码
 */
-void UDP_inti(u16_t port)
+static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err)
 {
-  udp=udp_new();
-  udp_bind(udp,IP_ADDR_ANY,port);
-  udp_recv(udp,udp_receive_callback,NULL);
+  if (p == NULL)
+  {
+    /* p==NULL 表示对端关闭了连接 */
+    tcp_client_pcb = NULL;
+    tcp_close(tpcb);
+    return ERR_OK;
+  }
+
+  if (err == ERR_OK)
+  {
+    //执行命令
+    Command_Execute(p->payload, p->len);
+    /* 用完必须释放 pbuf，否则每次收包都泄漏内存，跑一会儿就死 */
+    pbuf_free(p);
+  }
+
+  return ERR_OK;
+}
+/*
+TCP 错误回调函数
+*/
+static void tcp_err_callback(void *arg, err_t err)
+{
+  /* 连接断开了，清空指针，避免后面串口还往无效 pcb 发数据 */
+  tcp_client_pcb = NULL;
+}
+/*
+  TCP 连接建立回调函数
+  Input : arg – 注册时传入的自定义参数
+          newpcb – 新建的连接 PCB
+          err – 错误码
+*/
+static err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err)
+{
+  if (err != ERR_OK || newpcb == NULL)
+    return ERR_ABRT;   /* 连接建立失败，直接拒绝 */
+
+  /* 记住这个连接，供串口发数据用 */
+  tcp_client_pcb = newpcb;
+
+  /* 注册收数据回调、错误回调，并绑定参数 */
+  tcp_arg(newpcb, NULL);               /* 想传自定义数据就放这里 */
+  tcp_recv(newpcb, tcp_recv_callback); /* 收到数据时调用 */
+  tcp_err(newpcb, tcp_err_callback);   /* 连接断开时调用 */
+
+  return ERR_OK;  /* 接受该连接 */
+}
+/*
+TCP初始化函数
+*/
+void TCP_Server_Init(u16_t port)
+{
+  /* 1. 新建 pcb */
+  tcp_server_pcb = tcp_new();
+  if (tcp_server_pcb == NULL)
+    return;  /* 内存不足，创建失败 */
+
+  /* 2. 绑定端口，IP_ADDR_ANY 表示不限定来源 IP */
+  tcp_bind(tcp_server_pcb, IP_ADDR_ANY, port);
+
+  /* 3. 进入监听状态。
+     注意：tcp_listen 会返回一个新 pcb，必须接住，旧的已经失效 */
+  tcp_server_pcb = tcp_listen(tcp_server_pcb);
+
+  /* 4. 注册“有客户端来连接”的回调 */
+  tcp_accept(tcp_server_pcb, tcp_accept_callback);
 }
 /* USER CODE END 0 */
 
@@ -297,10 +367,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   /* 初始化后立即检查一次链路，以便已插网线时及时启动 MAC。 */
   App_Ethernet_Link_Check(netif_default);
-  //UDP初始化并输入UDP绑定端口
-  UDP_inti(5000);
-  //串口不定长接收
-  HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)UART1_RxBuffer, LEN);
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -311,14 +379,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    static uint32_t last_link_check_tick = 0U; /* 保存上一次链路检查的系统时间。 */
-    uint32_t now = HAL_GetTick();             /* 读取当前系统时间，单位为毫秒。 */
-    /* 利用无符号减法处理计数器回绕，并将检查频率限制在每 100 毫秒一次。 */
-    if ((now - last_link_check_tick) >= APP_LINK_CHECK_INTERVAL_MS)
-    {
-      last_link_check_tick = now;             /* 更新检查时间。 */
-      App_Ethernet_Link_Check(netif_default); /* 同步 PHY、MAC 和 LwIP 的链路状态。 */
-    }
+    
   }
   /* USER CODE END 3 */
 }
@@ -370,17 +431,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-//不定长接受回调
-void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
-{
-  if(huart->Instance == USART1)
-  {
-    UART1_RxBuffer[Size]='\0';
-    UDP_Sent(udp,UART1_RxBuffer);
-    //重新开启不定长中断接收
-    HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)UART1_RxBuffer, LEN);
-  }
-}
+
 /* USER CODE END 4 */
 
 /**

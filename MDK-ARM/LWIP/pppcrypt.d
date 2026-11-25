@@ -34,6 +34,8 @@ lwip\pppcrypt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 lwip\pppcrypt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 lwip\pppcrypt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 lwip\pppcrypt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+lwip\pppcrypt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+lwip\pppcrypt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 lwip\pppcrypt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 lwip\pppcrypt.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/debug.h
 lwip\pppcrypt.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h

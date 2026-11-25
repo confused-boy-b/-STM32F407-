@@ -33,6 +33,8 @@ lwip\pbuf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 lwip\pbuf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 lwip\pbuf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 lwip\pbuf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+lwip\pbuf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+lwip\pbuf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 lwip\pbuf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/debug.h
 lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h
@@ -56,6 +58,18 @@ lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/priv/mem_priv.h
 lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/stats.h
 lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/def.h
 lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/sys.h
+lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/system/arch/sys_arch.h
+lwip\pbuf.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
+lwip\pbuf.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+lwip\pbuf.o: ../Core/Inc/FreeRTOSConfig.h
+lwip\pbuf.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+lwip\pbuf.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+lwip\pbuf.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+lwip\pbuf.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+lwip\pbuf.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+lwip\pbuf.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+lwip\pbuf.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+lwip\pbuf.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/netif.h
 lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/ip_addr.h
 lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/ip4_addr.h
@@ -72,3 +86,5 @@ lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/icmp.h
 lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/icmp.h
 lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/tcp.h
 lwip\pbuf.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/tcpip.h
+lwip\pbuf.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/timeouts.h

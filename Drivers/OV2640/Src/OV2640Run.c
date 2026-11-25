@@ -4,7 +4,8 @@
 #include <stdio.h>                      /* 提供 sprintf 声明。 */
 #include <string.h>                     /* 提供 strlen 声明。 */
 
-#define jepg_data_size 20*1024
+/* 帧缓冲按 uint32 计数：8*1024 字 = 32KB，足够容纳 224x168 JPEG 一帧。 */
+#define jepg_data_size 8*1024
 #define jpeg_line_size 1*1024
 __ALIGNED(4) uint32_t g_jpeg_data_buf[jepg_data_size];  /*JEPG数据缓存,一帧数据*/
 /* buf中的JPEG有效数据长度 */

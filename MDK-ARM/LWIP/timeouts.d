@@ -33,6 +33,8 @@ lwip\timeouts.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 lwip\timeouts.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 lwip\timeouts.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 lwip\timeouts.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+lwip\timeouts.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+lwip\timeouts.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 lwip\timeouts.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/debug.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h
@@ -46,6 +48,19 @@ lwip\timeouts.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/opt.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/timeouts.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/err.h
+lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/sys.h
+lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/system/arch/sys_arch.h
+lwip\timeouts.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
+lwip\timeouts.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+lwip\timeouts.o: ../Core/Inc/FreeRTOSConfig.h
+lwip\timeouts.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+lwip\timeouts.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+lwip\timeouts.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+lwip\timeouts.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+lwip\timeouts.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+lwip\timeouts.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+lwip\timeouts.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+lwip\timeouts.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/priv/tcp_priv.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/tcp.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/tcpbase.h
@@ -72,6 +87,7 @@ lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/icmp.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/icmp.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/tcp.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/priv/tcpip_priv.h
+lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/tcpip.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/ip4_frag.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/etharp.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ethernet.h
@@ -85,4 +101,3 @@ lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/nd6.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/ip6_frag.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/mld6.h
 lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/dhcp6.h
-lwip\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/sys.h

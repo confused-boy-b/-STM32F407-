@@ -26,6 +26,9 @@
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\system\\arch",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Drivers\\OV2640\\Inc",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Drivers\\SYSTEM\\delay",
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\FreeRTOS\\Source\\include",
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\FreeRTOS\\Source\\CMSIS_RTOS_V2",
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\RVDS\\ARM_CM4F",
                 "E:\\Keil_v5\\ARM\\ARMCC\\include",
                 "E:\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\MDK-ARM",
@@ -37,8 +40,11 @@
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\core",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\core\\ipv4",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\core\\ipv6",
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\system\\OS",
                 "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\LwIP\\src\\apps\\mqtt",
-                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Drivers\\OV2640\\Src"
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Drivers\\OV2640\\Src",
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\FreeRTOS\\Source",
+                "e:\\STM32_Project\\STM32F407HAL\\LWIP - 副本\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\MemMang"
             ],
             "defines": [
                 "USE_HAL_DRIVER",

@@ -21,17 +21,18 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "lwip/opt.h"
-#include "lwip/mem.h"
-#include "lwip/memp.h"
 #include "lwip/timeouts.h"
 #include "netif/ethernet.h"
 #include "netif/etharp.h"
 #include "lwip/ethip6.h"
 #include "ethernetif.h"
 /* USER CODE BEGIN Include for User BSP */
-
+#include "eth_custom_phy_interface.h"  /* PHY 寄存器地址和位定义 */
+#include "lwip/netifapi.h"               /* 从任务中安全地更新 lwIP 网卡状态 */
 /* USER CODE END Include for User BSP */
 #include <string.h>
+#include "cmsis_os.h"
+#include "lwip/tcpip.h"
 
 /* Within 'USER CODE' section, code will be kept by default at each generation */
 /* USER CODE BEGIN 0 */
@@ -39,7 +40,14 @@
 /* USER CODE END 0 */
 
 /* Private define ------------------------------------------------------------*/
-
+/* The time to block waiting for input. */
+#define TIME_WAITING_FOR_INPUT ( portMAX_DELAY )
+/* Time to block waiting for transmissions to finish */
+#define ETHIF_TX_TIMEOUT (2000U)
+/* USER CODE BEGIN OS_THREAD_STACK_SIZE_WITH_RTOS */
+/* Stack size of the interface thread */
+#define INTERFACE_THREAD_STACK_SIZE ( 350 )
+/* USER CODE END OS_THREAD_STACK_SIZE_WITH_RTOS */
 /* Network interface name */
 #define IFNAME0 's'
 #define IFNAME1 't'
@@ -49,7 +57,7 @@
 #define ETH_TX_BUFFER_MAX             ((ETH_TX_DESC_CNT) * 2U)
 
 /* USER CODE BEGIN 1 */
-
+#define APP_PHY_ADDRESS             0U    /* YT8512C 在 MDIO 总线上的地址。 */
 /* USER CODE END 1 */
 
 /* Private variables ---------------------------------------------------------*/
@@ -102,6 +110,9 @@ ETH_DMADescTypeDef  DMATxDscrTab[ETH_TX_DESC_CNT]; /* Ethernet Tx DMA Descriptor
 
 /* USER CODE END 2 */
 
+osSemaphoreId RxPktSemaphore = NULL;   /* Semaphore to signal incoming packets */
+osSemaphoreId TxPktSemaphore = NULL;   /* Semaphore to signal transmit packet complete */
+
 /* Global Ethernet handle */
 ETH_HandleTypeDef heth;
 ETH_TxPacketConfig TxConfig;
@@ -114,6 +125,37 @@ ETH_TxPacketConfig TxConfig;
 
 /* Private functions ---------------------------------------------------------*/
 void pbuf_free_custom(struct pbuf *p);
+
+/**
+  * @brief  Ethernet Rx Transfer completed callback
+  * @param  handlerEth: ETH handler
+  * @retval None
+  */
+void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *handlerEth)
+{
+  osSemaphoreRelease(RxPktSemaphore);
+}
+/**
+  * @brief  Ethernet Tx Transfer completed callback
+  * @param  handlerEth: ETH handler
+  * @retval None
+  */
+void HAL_ETH_TxCpltCallback(ETH_HandleTypeDef *handlerEth)
+{
+  osSemaphoreRelease(TxPktSemaphore);
+}
+/**
+  * @brief  Ethernet DMA transfer error callback
+  * @param  handlerEth: ETH handler
+  * @retval None
+  */
+void HAL_ETH_ErrorCallback(ETH_HandleTypeDef *handlerEth)
+{
+  if((HAL_ETH_GetDMAError(handlerEth) & ETH_DMASR_RBUS) == ETH_DMASR_RBUS)
+  {
+     osSemaphoreRelease(RxPktSemaphore);
+  }
+}
 
 /* USER CODE BEGIN 4 */
 
@@ -132,6 +174,12 @@ void pbuf_free_custom(struct pbuf *p);
 static void low_level_init(struct netif *netif)
 {
   HAL_StatusTypeDef hal_eth_init_status = HAL_OK;
+/* USER CODE BEGIN OS_THREAD_ATTR_CMSIS_RTOS_V2 */
+  osThreadAttr_t attributes;
+/* USER CODE END OS_THREAD_ATTR_CMSIS_RTOS_V2 */
+/* USER CODE BEGIN low_level_init Variables Initialization for User BSP */
+
+/* USER CODE END low_level_init Variables Initialization for User BSP */
   /* Start ETH HAL Init */
 
    uint8_t MACAddr[6] ;
@@ -188,14 +236,31 @@ static void low_level_init(struct netif *netif)
     netif->flags |= NETIF_FLAG_BROADCAST;
   #endif /* LWIP_ARP */
 
+  /* create a binary semaphore used for informing ethernetif of frame reception */
+  RxPktSemaphore = osSemaphoreNew(1, 0, NULL);
+
+  /* create a binary semaphore used for informing ethernetif of frame transmission */
+  TxPktSemaphore = osSemaphoreNew(1, 0, NULL);
+
+  /* create the task that handles the ETH_MAC */
+/* USER CODE BEGIN OS_THREAD_NEW_CMSIS_RTOS_V2 */
+  memset(&attributes, 0x0, sizeof(osThreadAttr_t));
+  attributes.name = "EthIf";
+  attributes.stack_size = INTERFACE_THREAD_STACK_SIZE;
+  attributes.priority = osPriorityRealtime;
+  osThreadNew(ethernetif_input, netif, &attributes);
+/* USER CODE END OS_THREAD_NEW_CMSIS_RTOS_V2 */
+
 /* USER CODE BEGIN low_level_init Code 1 for User BSP */
 
 /* USER CODE END low_level_init Code 1 for User BSP */
 
   if (hal_eth_init_status == HAL_OK)
   {
-  /* Get link state */
-  ethernet_link_check_state(netif);
+/* USER CODE BEGIN low_level_init Code 2 for User BSP */
+
+/* USER CODE END low_level_init Code 2 for User BSP */
+
   }
   else
   {
@@ -258,7 +323,32 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
   TxConfig.TxBuffer = Txbuffer;
   TxConfig.pData = p;
 
-  HAL_ETH_Transmit(&heth, &TxConfig, ETH_DMA_TRANSMIT_TIMEOUT);
+  pbuf_ref(p);
+
+  do
+  {
+    if(HAL_ETH_Transmit_IT(&heth, &TxConfig) == HAL_OK)
+    {
+      errval = ERR_OK;
+    }
+    else
+    {
+
+      if(HAL_ETH_GetError(&heth) & HAL_ETH_ERROR_BUSY)
+      {
+        /* Wait for descriptors to become available */
+        osSemaphoreAcquire(TxPktSemaphore, ETHIF_TX_TIMEOUT);
+        HAL_ETH_ReleaseTxPacket(&heth);
+        errval = ERR_BUF;
+      }
+      else
+      {
+        /* Other error */
+        pbuf_free(p);
+        errval =  ERR_IF;
+      }
+    }
+  }while(errval == ERR_BUF);
 
   return errval;
 }
@@ -292,21 +382,28 @@ static struct pbuf * low_level_input(struct netif *netif)
  *
  * @param netif the lwip network interface structure for this ethernetif
  */
-void ethernetif_input(struct netif *netif)
+void ethernetif_input(void* argument)
 {
   struct pbuf *p = NULL;
+  struct netif *netif = (struct netif *) argument;
 
-  do
+  for( ;; )
   {
-    p = low_level_input( netif );
-    if (p != NULL)
+    if (osSemaphoreAcquire(RxPktSemaphore, TIME_WAITING_FOR_INPUT) == osOK)
     {
-      if (netif->input( p, netif) != ERR_OK )
+      do
       {
-        pbuf_free(p);
-      }
+        p = low_level_input( netif );
+        if (p != NULL)
+        {
+          if (netif->input( p, netif) != ERR_OK )
+          {
+            pbuf_free(p);
+          }
+        }
+      } while(p!=NULL);
     }
-  } while(p!=NULL);
+  }
 }
 
 #if !LWIP_ARP
@@ -404,6 +501,7 @@ void pbuf_free_custom(struct pbuf *p)
   if (RxAllocStatus == RX_ALLOC_ERROR)
   {
     RxAllocStatus = RX_ALLOC_OK;
+    osSemaphoreRelease(RxPktSemaphore);
   }
 }
 
@@ -430,9 +528,201 @@ u32_t sys_now(void)
   * @brief  Check the ETH link state then update ETH driver and netif link accordingly.
   * @retval None
   */
-void ethernet_link_check_state(struct netif *netif)
+void ethernet_link_thread(void* argument)
 {
 
+/* USER CODE BEGIN ETH link init */
+  /* MX_LWIP_Init() 创建线程时传入的网卡指针。 */
+  struct netif *netif = (struct netif *)argument;
+   /* 记录是否已向 lwIP 报告链路接通，避免每轮重复通知。 */
+    uint8_t reported_link_up = 0U;
+/* USER CODE END ETH link init */
+
+  for(;;)
+  {
+
+/* USER CODE BEGIN ETH link Thread core code for User BSP */
+    uint32_t bsr = 0U;       /* PHY 基本状态寄存器。 */
+    uint32_t bcr = 0U;       /* PHY 基本控制寄存器。 */
+    uint32_t anar = 0U;      /* 本端宣告的工作能力。 */
+    uint32_t anlpar = 0U;    /* 对端宣告的工作能力。 */
+    uint32_t common = 0U;    /* 双方共同支持的工作能力。 */
+    uint32_t speed = 0U;
+    uint32_t duplex = 0U;
+    ETH_MACConfigTypeDef mac_config;
+
+    /*
+      * link_mode:
+      * -1：读取 PHY 失败，本轮保持原状态；
+      *  0：链路断开或自动协商尚未完成；
+      *  1：链路就绪，speed 和 duplex 有效。
+      */
+    int32_t link_mode = -1;
+
+    if (netif == NULL)
+    {
+        osDelay(100);
+        continue;
+    }
+
+    /*
+      * 用 do...while(0) 把一次 PHY 检查组织成一个代码块。
+      * 其中的 break 只结束本轮检查，不会退出线程。
+      */
+    do
+    {
+        /* BSR 的链路位可能保留旧的断开状态，因此连续读取两次。 */
+        if (HAL_ETH_ReadPHYRegister(&heth, APP_PHY_ADDRESS,
+                                    USER_PHY_BSR, &bsr) != HAL_OK ||
+            HAL_ETH_ReadPHYRegister(&heth, APP_PHY_ADDRESS,
+                                    USER_PHY_BSR, &bsr) != HAL_OK)
+        {
+            break;
+        }
+
+        /* MDIO 无响应时可能读到全 1，不能据此判断链路已接通。 */
+        if (bsr == 0xFFFFU)
+        {
+            break;
+        }
+
+        if ((bsr & USER_PHY_BSR_LINK_STATUS) == 0U)
+        {
+            link_mode = 0;
+            break;
+        }
+
+        if (HAL_ETH_ReadPHYRegister(&heth, APP_PHY_ADDRESS,
+                                    USER_PHY_BCR, &bcr) != HAL_OK)
+        {
+            break;
+        }
+
+        if ((bcr & USER_PHY_BCR_AUTONEGO_EN) == 0U)
+        {
+            /* PHY 使用手动设置的速率和双工模式。 */
+            speed = ((bcr & USER_PHY_BCR_SPEED_SELECT) != 0U)
+                        ? ETH_SPEED_100M : ETH_SPEED_10M;
+            duplex = ((bcr & USER_PHY_BCR_DUPLEX_MODE) != 0U)
+                          ? ETH_FULLDUPLEX_MODE : ETH_HALFDUPLEX_MODE;
+            link_mode = 1;
+            break;
+        }
+
+        /* 开启自动协商时，等待协商完成再配置 MAC。 */
+        if ((bsr & USER_PHY_BSR_AUTONEGO_CPLT) == 0U)
+        {
+            link_mode = 0;
+            break;
+        }
+
+        if (HAL_ETH_ReadPHYRegister(&heth, APP_PHY_ADDRESS,
+                                    USER_PHY_ANAR, &anar) != HAL_OK ||
+            HAL_ETH_ReadPHYRegister(&heth, APP_PHY_ADDRESS,
+                                    USER_PHY_ANLPAR, &anlpar) != HAL_OK)
+        {
+            break;
+        }
+
+        common = anar & anlpar;
+
+        /* 按 100M 全双工、100M 半双工、10M 全双工、10M 半双工选择。 */
+        if ((common & USER_PHY_ANAR_100BASE_TX_FD) != 0U)
+        {
+            speed = ETH_SPEED_100M;
+            duplex = ETH_FULLDUPLEX_MODE;
+        }
+        else if ((common & USER_PHY_ANAR_100BASE_TX) != 0U)
+        {
+            speed = ETH_SPEED_100M;
+            duplex = ETH_HALFDUPLEX_MODE;
+        }
+        else if ((common & USER_PHY_ANAR_10BASE_T_FD) != 0U)
+        {
+            speed = ETH_SPEED_10M;
+            duplex = ETH_FULLDUPLEX_MODE;
+        }
+        else if ((common & USER_PHY_ANAR_10BASE_T) != 0U)
+        {
+            speed = ETH_SPEED_10M;
+            duplex = ETH_HALFDUPLEX_MODE;
+        }
+        else
+        {
+            /* 没有共同支持的模式。 */
+            link_mode = 0;
+            break;
+        }
+
+        link_mode = 1;
+    } while (0);
+
+    if (link_mode == 0)
+    {
+        /* 先通知 lwIP 停止使用这条链路。 */
+        if (reported_link_up != 0U)
+        {
+            if (netifapi_netif_set_link_down(netif) == ERR_OK)
+            {
+                reported_link_up = 0U;
+            }
+        }
+
+        /* 停止 MAC 的中断收发；下轮会继续检查 PHY。 */
+        if (heth.gState == HAL_ETH_STATE_STARTED)
+        {
+            (void)HAL_ETH_Stop_IT(&heth);
+        }
+    }
+    else if (link_mode == 1 &&
+              HAL_ETH_GetMACConfig(&heth, &mac_config) == HAL_OK)
+    {
+        /* PHY 重新协商出新模式时，先停 MAC，再修改速率和双工。 */
+        if (heth.gState == HAL_ETH_STATE_STARTED &&
+            (mac_config.Speed != speed ||
+              mac_config.DuplexMode != duplex))
+        {
+            if (reported_link_up != 0U)
+            {
+                if (netifapi_netif_set_link_down(netif) == ERR_OK)
+                {
+                    reported_link_up = 0U;
+                }
+            }
+
+            (void)HAL_ETH_Stop_IT(&heth);
+        }
+
+        /* MAC 处于就绪状态时，配置协商结果并启动中断收发。 */
+        if (heth.gState == HAL_ETH_STATE_READY)
+        {
+          /* 配置MAC，由PHY 协商的速度 */
+            mac_config.Speed = speed;
+            /* 配置MAC，由PHY 协商的工作模式 */
+            mac_config.DuplexMode = duplex;
+
+            if (HAL_ETH_SetMACConfig(&heth, &mac_config) == HAL_OK)
+            {
+                (void)HAL_ETH_Start_IT(&heth);
+            }
+        }
+
+        /* 只有 MAC 确实启动后，才向 lwIP 报告链路接通。 */
+        if (heth.gState == HAL_ETH_STATE_STARTED &&
+            reported_link_up == 0U)
+        {
+           /* 告诉 lwIP：这块网卡的物理链路可用 */
+            if (netifapi_netif_set_link_up(netif) == ERR_OK)
+            {
+                reported_link_up = 1U;
+            }
+        }
+    }
+    /* link_mode == -1 时保留现状，下轮重试。 */
+/* USER CODE END ETH link Thread core code for User BSP */
+
+    osDelay(100);
+  }
 }
 
 void HAL_ETH_RxAllocateCallback(uint8_t **buff)

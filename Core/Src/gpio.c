@@ -122,6 +122,9 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   GPIO_InitStruct.Alternate = GPIO_AF11_ETH;
   HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);    // 配置GPIOG对应引脚
 
+  HAL_NVIC_SetPriority(ETH_IRQn, 5, 0);  // 设置以太网中断优先级为5
+  HAL_NVIC_EnableIRQ(ETH_IRQn);          // 使能以太网中断
+
   Eth_Reset();  // 复位以太网PHY芯片
 }
 

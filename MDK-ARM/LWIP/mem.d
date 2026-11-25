@@ -33,6 +33,8 @@ lwip\mem.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 lwip\mem.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 lwip\mem.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 lwip\mem.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+lwip\mem.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+lwip\mem.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 lwip\mem.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/debug.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h
@@ -47,6 +49,19 @@ lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/opt.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/mem.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/def.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/sys.h
+lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/err.h
+lwip\mem.o: ../Middlewares/Third_Party/LwIP/system/arch/sys_arch.h
+lwip\mem.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
+lwip\mem.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+lwip\mem.o: ../Core/Inc/FreeRTOSConfig.h
+lwip\mem.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+lwip\mem.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+lwip\mem.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+lwip\mem.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+lwip\mem.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+lwip\mem.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+lwip\mem.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+lwip\mem.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/stats.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/memp.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/priv/memp_std.h
@@ -54,5 +69,4 @@ lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/priv/memp_std.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/priv/memp_priv.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/priv/mem_priv.h
 lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/stats.h
-lwip\mem.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/err.h
 lwip\mem.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

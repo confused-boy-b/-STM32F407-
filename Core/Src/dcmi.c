@@ -73,7 +73,6 @@ void HAL_DCMI_MspInit(DCMI_HandleTypeDef* dcmiHandle)
     __HAL_RCC_GPIOC_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     /**DCMI GPIO Configuration
-    PE4     ------> DCMI_D4
     PE5     ------> DCMI_D6
     PE6     ------> DCMI_D7
     PA4     ------> DCMI_HSYNC
@@ -82,10 +81,11 @@ void HAL_DCMI_MspInit(DCMI_HandleTypeDef* dcmiHandle)
     PC7     ------> DCMI_D1
     PC8     ------> DCMI_D2
     PC9     ------> DCMI_D3
+    PC11     ------> DCMI_D4
     PB6     ------> DCMI_D5
     PB7     ------> DCMI_VSYNC
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6;
+    GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -99,7 +99,8 @@ void HAL_DCMI_MspInit(DCMI_HandleTypeDef* dcmiHandle)
     GPIO_InitStruct.Alternate = GPIO_AF13_DCMI;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
+    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9
+                          |GPIO_PIN_11;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -136,7 +137,7 @@ void HAL_DCMI_MspInit(DCMI_HandleTypeDef* dcmiHandle)
     __HAL_LINKDMA(dcmiHandle,DMA_Handle,hdma_dcmi);
 
     /* DCMI interrupt Init */
-    HAL_NVIC_SetPriority(DCMI_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(DCMI_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(DCMI_IRQn);
   /* USER CODE BEGIN DCMI_MspInit 1 */
 
@@ -156,7 +157,6 @@ void HAL_DCMI_MspDeInit(DCMI_HandleTypeDef* dcmiHandle)
     __HAL_RCC_DCMI_CLK_DISABLE();
 
     /**DCMI GPIO Configuration
-    PE4     ------> DCMI_D4
     PE5     ------> DCMI_D6
     PE6     ------> DCMI_D7
     PA4     ------> DCMI_HSYNC
@@ -165,14 +165,16 @@ void HAL_DCMI_MspDeInit(DCMI_HandleTypeDef* dcmiHandle)
     PC7     ------> DCMI_D1
     PC8     ------> DCMI_D2
     PC9     ------> DCMI_D3
+    PC11     ------> DCMI_D4
     PB6     ------> DCMI_D5
     PB7     ------> DCMI_VSYNC
     */
-    HAL_GPIO_DeInit(GPIOE, GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6);
+    HAL_GPIO_DeInit(GPIOE, GPIO_PIN_5|GPIO_PIN_6);
 
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4|GPIO_PIN_6);
 
-    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9);
+    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9
+                          |GPIO_PIN_11);
 
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_6|GPIO_PIN_7);
 

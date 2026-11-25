@@ -35,6 +35,7 @@ extern "C" {
 extern DCMI_HandleTypeDef hdcmi;
 
 /* USER CODE BEGIN Private defines */
+extern DMA_HandleTypeDef hdma_dcmi;   /* DCMI 双缓冲 DMA 句柄，定义于 dcmi.c。 */
 
 /* USER CODE END Private defines */
 

@@ -59,19 +59,19 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOG, OV_PWDN_Pin|OV_ESET_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pin : ETH_RESET_Pin */
-  GPIO_InitStruct.Pin = ETH_RESET_Pin;
+  /*Configure GPIO pins : ETH_RESET_Pin SCCB_SDA_Pin */
+  GPIO_InitStruct.Pin = ETH_RESET_Pin|SCCB_SDA_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(ETH_RESET_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SCCB_SCL_Pin SCCB_SDA_Pin */
-  GPIO_InitStruct.Pin = SCCB_SCL_Pin|SCCB_SDA_Pin;
+  /*Configure GPIO pin : SCCB_SCL_Pin */
+  GPIO_InitStruct.Pin = SCCB_SCL_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+  HAL_GPIO_Init(SCCB_SCL_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : OV_PWDN_Pin OV_ESET_Pin */
   GPIO_InitStruct.Pin = OV_PWDN_Pin|OV_ESET_Pin;
@@ -121,6 +121,9 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF11_ETH;
   HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);    // 配置GPIOG对应引脚
+
+  HAL_NVIC_SetPriority(ETH_IRQn, 5, 0);  // 设置以太网中断优先级为5
+  HAL_NVIC_EnableIRQ(ETH_IRQn);          // 使能以太网中断
 
   Eth_Reset();  // 复位以太网PHY芯片
 }

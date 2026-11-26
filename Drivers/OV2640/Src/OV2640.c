@@ -78,7 +78,7 @@ uint8_t ov2640_init(void)
     reg = ov2640_read_reg(OV2640_SENSOR_MIDH);      /* 读取厂家ID 高八位 */
     reg <<= 8;
     reg |= ov2640_read_reg(OV2640_SENSOR_MIDL);     /* 读取厂家ID 低八位 */
-
+    
     if (reg != OV2640_MID)      /* ID 是否正常 */
     {
         /* 串口提示厂家 ID 校验失败，发送长度不包含字符串结束符。 */

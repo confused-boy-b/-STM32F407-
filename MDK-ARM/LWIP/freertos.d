@@ -46,6 +46,7 @@ lwip\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 lwip\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
 lwip\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 lwip\freertos.o: ../Core/Inc/tcp_server.h
+lwip\freertos.o: ../Core/Inc/usart.h
 lwip\freertos.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/tcp.h
 lwip\freertos.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/opt.h
 lwip\freertos.o: ../LWIP/Target/lwipopts.h
@@ -96,4 +97,7 @@ lwip\freertos.o: ../Middlewares/Third_Party/LwIP/system/arch/sys_arch.h
 lwip\freertos.o: ../LWIP/Target/ethernetif.h
 lwip\freertos.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/tcpip.h
 lwip\freertos.o: ../LWIP/Target/eth_custom_phy_interface.h
-lwip\freertos.o: ../Core/Inc/usart.h
+lwip\freertos.o: ../Drivers/OV2640/Inc/OV2640Run.h
+lwip\freertos.o: ../Drivers/OV2640/Inc/OV2640.h
+lwip\freertos.o: ../Core/Inc/gpio.h
+lwip\freertos.o: ../Drivers/SYSTEM/delay/delay.h

@@ -17,10 +17,10 @@
 
 /* 调试打印开关：1 打开（需本工程已配置 USART2 并定义 huart2），0 关闭。
  * 关闭后 huart2 相关代码不参与编译，避免依赖未配置的外设。 */
-#define OV2640_DEBUG        0
+#define OV2640_DEBUG        1
 
 #if OV2640_DEBUG
-#define OV2640_DEBUG_PRINT(buf, len)  HAL_UART_Transmit(&huart2, (const uint8_t *)(buf), (len), 1000)
+#define OV2640_DEBUG_PRINT(buf, len)  HAL_UART_Transmit(&huart1, (const uint8_t *)(buf), (len), 1000)
 #else
 #define OV2640_DEBUG_PRINT(buf, len)  ((void)0)
 #endif

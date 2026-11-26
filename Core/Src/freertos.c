@@ -27,6 +27,8 @@
 /* USER CODE BEGIN Includes */
 #include "tcp_server.h"
 #include "usart.h"
+#include "OV2640Run.h"
+#include "delay.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,10 +59,16 @@ static volatile uint32_t TcpCounter = 0;
 /* 任务属性：名称、栈大小和优先级。 */
 static const osThreadAttr_t TcpTask_attributes = {
     .name = "TcpTask",              /* 调试时显示的任务名称。 */
-    .stack_size = 512,              /* CMSIS-RTOS V2 的单位是字节。 */
+    .stack_size = 2048,             /* 摄像头调用链需要比计数示例更多的栈。 */
     .priority = osPriorityNormal,   /* 普通优先级。 */
 };
 
+/* TCP 收到拍照请求时释放；摄像头任务等待。 */
+osSemaphoreId_t photoSemHandle;
+/* 一帧全部进入 lwIP 的复制队列后释放，防止摄像头提前覆盖全局帧缓冲。 */
+static osSemaphoreId_t frameQueuedSem;
+/* tcpip_callback 异步使用此对象，摄像头任务等待完成前不能改写它。 */
+static tcp_image_job_t image_job;
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -100,7 +108,14 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
+  /* 两个初始为空的二值信号量：分别表示拍照请求和帧缓冲可复用。 */
+  photoSemHandle = osSemaphoreNew(1, 0, NULL);
+  frameQueuedSem = osSemaphoreNew(1, 0, NULL);
+
+  if (photoSemHandle == NULL || frameQueuedSem == NULL)
+  {
+    Error_Handler();  /* 创建失败，例如 FreeRTOS 堆空间不足。 */
+  }
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
@@ -165,18 +180,45 @@ void StartDefaultTask(void *argument)
 /* USER CODE BEGIN Application */
 static void TcpAppTask(void *argument)
 {
-    /* 这个示例没有使用传入参数，显式标记以避免编译器警告。 */
+    err_t post_result;
     (void)argument;
+    for (;;)
+    {
+        uint8_t *frame = NULL;
+        uint32_t frame_len = 0U;
 
-    /* 任务通常持续运行，不从入口函数返回。 */
-    for (;;) {
-        /* 示例工作：每运行一轮，计数器加一。 */
-        TcpCounter++;
+        /* 等待 TCP 回调发出的拍照请求，不在 lwIP 核心线程中等待 DCMI。 */
+        if (osSemaphoreAcquire(photoSemHandle, osWaitForever) != osOK)
+        {
+            continue;
+        }
 
-        /* 暂停当前任务，让其他任务运行。
-         * 当前工程的系统节拍是每秒 1000 次，因此 1000 tick 约为 1 秒。
-         */
-        osDelay(1000);
+        jpeg_test(&frame, &frame_len);
+        if (frame == NULL || frame_len == 0U)
+        {
+            continue; /* 没有得到完整 JPEG，本次不发送。 */
+        }
+
+        image_job.data = frame;
+        image_job.len = frame_len;
+        image_job.queued_sem = frameQueuedSem;
+
+        /* 只投递发送任务；TCP PCB 始终由 lwIP 核心线程访问。 */
+        do
+        {
+            post_result = tcpip_callback(TCP_ImageStart, &image_job);
+            if (post_result == ERR_MEM)
+            {
+                osDelay(10); /* 核心线程邮箱暂满，稍后重试而不覆盖帧。 */
+            }
+        } while (post_result == ERR_MEM);
+
+        if (post_result == ERR_OK)
+        {
+            /* 再获取信号量，全部字节已经入队，可以复用帧缓冲*/
+            (void)osSemaphoreAcquire(frameQueuedSem, osWaitForever);
+            TcpCounter++;
+        }
     }
 }
 /* USER CODE END Application */

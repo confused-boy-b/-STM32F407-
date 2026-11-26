@@ -81,7 +81,7 @@ void jpeg_data_process(void)
 #if OV2640_DEBUG
     char str[50];
     sprintf((char*)str, "CR:%d,rlen:%d\r\n", (DMA2_Stream1->CR & (1 << 19)),rlen);
-    HAL_UART_Transmit(&huart2, (uint8_t*)str, strlen(str), 1000);
+    OV2640_DEBUG_PRINT((uint8_t*)str, strlen(str));
 #endif
     /* 数据采集完成，等待其他函数处理 */
     g_jpeg_data_ok = 1;
@@ -215,19 +215,20 @@ void jpeg_test(uint8_t **send_ptr, uint32_t *len)
 #if OV2640_DEBUG
       char str[50];
       sprintf((char*)str, "jpglen:%d,jpgstart:%d\r\n", jpglen,jpgstart);
-      HAL_UART_Transmit(&huart2, (uint8_t*)str, strlen(str), 1000);
+      OV2640_DEBUG_PRINT((uint8_t*)str, strlen(str));
 #endif
       //如果文件大小不为0，则说明找到完整的JPEG数据，可以发送了
       if (jpglen||headok)
       {
         p += jpgstart;  /* 偏移到0XFF,0XD8处 */
-        *len = jpglen;
-        *send_ptr = p;
+        
         /* 从 JPEG 文件头开始发送，不能使用查找到文件尾时的 p[i]。 */
         // if (HAL_UART_Transmit(&huart1, p, (uint16_t)jpglen, HAL_MAX_DELAY) != HAL_OK)
         // {
         //   Error_Handler();
         // }
+        *len = jpglen;
+        *send_ptr = p;
       }
 
       /* 停止本帧 DMA；main() 随后重新启动下一帧。 */
